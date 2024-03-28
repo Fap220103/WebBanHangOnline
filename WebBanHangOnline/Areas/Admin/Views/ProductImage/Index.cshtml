@@ -1,0 +1,137 @@
+﻿@model IEnumerable<WebBanHangOnline.Models.EF.ProductImage>
+@{
+    ViewBag.Title = "Ảnh sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutEmpty.cshtml";
+}
+
+<style>
+    .glImage {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+    }
+
+        .glImage li {
+            margin-left:10px;
+        }
+        .box-btn{
+            margin-top:10px;
+            text-align:center;
+        }
+</style>
+<section class="content">
+    
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    Ảnh sản phẩm
+                </h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-danger" title="Collapse">
+                        Xóa hết
+                    </button>
+                    <input type="button" class="btn btn-success" value="Tải ảnh" onclick="BrowseServer('txtImage')" />
+
+                </div>
+            </div>
+            <div class="card-body">
+                <ul class="glImage">
+                    @if (Model != null)
+                    {
+                        foreach (var item in Model)
+                        {
+                            <li id="trow_@item.Id">
+                                <img src="@item.Image" width="200" style="cursor:pointer"/>
+                                <div class="box-btn">
+                                    <a href="#" data-id="@item.Id" class="btn btn-sm btn-danger btnDelete">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                    @if (item.IsDefault)
+                                    {
+                                        <a href="#" data-id="@item.Id" id="Default" class="btn btn-sm btn-success btnNoDefault">
+                                            <i class="fa fa-check"></i>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a href="#" data-id="@item.Id" class="btn btn-sm btn-warning btnDefault">
+                                            <i class="fa-solid fa-xmark"></i>
+                                        </a>
+                                    }
+
+                                </div>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+            <div class="card-footer">
+
+            </div>
+        </div>
+  
+   
+</section>
+
+
+<script>
+    function BrowseServer(field) {
+        var finder = new CKFinder();
+        finder.selectActionFunction = function (fileUrl) {
+            AddImage(@ViewBag.ProductId, fileUrl);
+        };
+        finder.popup();
+    }
+    function AddImage(id, url) {
+        $.ajax({
+            url: '/admin/productimage/addimage',
+            type: 'POST',
+            data: { productId: id,url:url },
+            success: function (rs) {
+                if (rs.success) {
+                    window.location.reload();
+                }
+            }
+        })
+    }
+    $(document).ready(function () { 
+        $('body').on('click', '.btnDelete', function () {
+            var id = $(this).data('id');
+            var conf = confirm("bạn có chắc chắn muốn xóa không");
+            if (conf === true) {
+                $.ajax({
+                    url: '/admin/ProductImage/delete',
+                    type: 'POST',
+                    data: { id: id },
+                    success: function (rs) {
+                        if (rs.success) {
+                            $('#trow_' + id).remove();
+                        }
+                    }
+                });
+            }
+        });
+        $('body').on('click', '.btnDefault', function () {
+            debugger;
+            var id = $(this).data('id');
+            var idDefault = $('#Default').attr("data-id");
+            
+            //var chuoi = String(idDefault);
+            var conf = confirm("bạn có chắc chắn muốn thay đổi không");
+            if (conf === true) {
+                $.ajax({
+                    url: '/admin/ProductImage/ChangeDefault',
+                    type: 'POST',
+                    data: { id: id, idDefault: idDefault },
+                    success: function (rs) {
+                        if (rs.success) {
+                            window.location.reload();
+                        }
+                    }
+                });
+            }
+        });
+        
+    });
+</script>

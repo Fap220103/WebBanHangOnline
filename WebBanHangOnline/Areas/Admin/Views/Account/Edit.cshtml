@@ -1,0 +1,76 @@
+﻿@model WebBanHangOnline.Models.CreateAccountViewModel
+@{
+    ViewBag.Title = "Create Account";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Quản lý Account</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">Account</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+
+<!-- Main content -->
+<section class="content">
+
+    <!-- Default box -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Cập nhật Tài khoản</h3>
+
+        </div>
+        <div class="card-body">
+            @using (Html.BeginForm("Edit", "Account", FormMethod.Post))
+            {
+                @Html.ValidationSummary(false)
+                @Html.AntiForgeryToken()
+             
+                <div class="form-group">
+                    <label>Tài khoản</label>
+                    @Html.TextBoxFor(x => x.UserName, new { @class = "form-control",@readonly="true" })
+                </div>
+                <div class="form-group">
+                    <label>Họ tên</label>
+                    @Html.TextBoxFor(x => x.FullName, new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    @Html.TextBoxFor(x => x.Email, new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    <label>Phone</label>
+                    @Html.TextBoxFor(x => x.Phone, new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    <label>Quyền</label>
+                    @Html.DropDownListFor(x => x.Roles, ViewBag.Role as SelectList, "--Chọn quyền--", new { @class = "form-control select", @multiple = "multiple" })
+                </div>
+             
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success">Sửa</button>
+                </div>
+            }
+        </div>
+    </div>
+    <!-- /.card-body -->
+    <div class="card-footer">
+
+    </div>
+    <!-- /.card-footer-->
+
+
+
+</section>
+<!-- /.content -->
