@@ -56,7 +56,7 @@ namespace WebBanHangOnline.Areas.Admin.Controllers
         [AllowAnonymous]
         public ActionResult Index()
         {
-            var items = db.Users.ToList();
+            var items = db.Users.ToList();  
             return View(items);
         }
 

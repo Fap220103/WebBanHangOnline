@@ -10,6 +10,7 @@
         margin: 0;
         padding: 0;
         display: flex;
+        flex-wrap: wrap;
     }
 
         .glImage li {
@@ -19,10 +20,16 @@
             margin-top:10px;
             text-align:center;
         }
+   
+    .card-body img {
+        width: 200px;
+        height: 200px;
+        margin: 20px;
+    }
 </style>
 <section class="content">
     
-        <div class="card">
+        <div class="card" style="">
             <div class="card-header">
                 <h3 class="card-title">
                     Ảnh sản phẩm
@@ -35,14 +42,14 @@
 
                 </div>
             </div>
-            <div class="card-body">
+            <div class="card-body body-image" >
                 <ul class="glImage">
                     @if (Model != null)
                     {
                         foreach (var item in Model)
                         {
                             <li id="trow_@item.Id">
-                                <img src="@item.Image" width="200" style="cursor:pointer"/>
+                                <img src="@item.Image"   style="cursor:pointer"/>
                                 <div class="box-btn">
                                     <a href="#" data-id="@item.Id" class="btn btn-sm btn-danger btnDelete">
                                         <i class="fa fa-trash"></i>

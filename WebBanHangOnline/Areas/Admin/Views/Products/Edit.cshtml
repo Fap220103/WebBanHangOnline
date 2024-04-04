@@ -95,7 +95,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Chi tiết sản phẩm</label>
-                                            @Html.TextBoxFor(x => x.Detail, new { @class = "form-control", @id = "txtDetail" })
+                                            @Html.TextAreaFor(x => x.Detail, new { @class = "form-control", @id = "txtDetail" })
                                   
                                         </div>
                                         <div class="row">
@@ -256,36 +256,7 @@
            
         });
       
-        function addImageProduct(url) {
-            var temp = $("#tCurrentId").val();
-            var currentId = parseInt(temp) + 1;
-            var str = "";
-            if (currentId == 1) {
-                str += `<tr id=trow_${currentId}>
-                             <td class="text-center">${currentId}</td>
-                             <td class="text-center"><img width="80" src="${url}"/>
-                             <input type='hidden' value=${url} name="Images"/>
-                             </td><td class="text-center"><input type="radio" name="rDefault" checked="checked" value=${currentId} /></td>
-                             <td class="text-center"><a href="#" data-id=${currentId} class="btn btn-sm btn-danger btnXoaAnh">Xóa</a></td>
-                         </tr>`;
-                }
-            else {
-                str += `<tr id=trow_${currentId}>
-                             <td class="text-center">${currentId}</td>
-                             <td class="text-center"><img width="80" src="${url}"/>
-                             <input type='hidden' value=${url} name="Images"/>
-                             </td><td class="text-center"><input type="radio" name="rDefault"  value=${currentId} /></td>
-                             <td class="text-center"><a href="#" data-id=${currentId} class="btn btn-sm btn-danger btnXoaAnh" >Xóa</a></td>
-                         </tr>`;
-                 }
-            $('#tbHtml').append(str);
-            $("#tCurrentId").val(currentId);
-            //$('#tbHtml tr td a').each(function () {
-            //    $(this.click(function () {
-
-            //    });
-            //});
-        }
+        
     </script>
 }
 

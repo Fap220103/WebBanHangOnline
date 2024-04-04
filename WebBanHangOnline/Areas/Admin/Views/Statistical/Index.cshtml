@@ -31,7 +31,24 @@
     <!-- Default box -->
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Danh sách @ViewBag.Title</h3>
+            <div class="row">
+                <div class="col-md-3">
+                    <p>Từ ngày</p>
+                    <input type="date" id="fromDate" value="" class="form-control" />
+                </div>
+                <div class="col-md-3">
+                    <p>Đến ngày</p>
+                    <input type="date" id="toDate" value="" class="form-control" />
+                </div>
+                <div class="col-md-3">
+                    <p></p>
+                    <button type="submit" class="btn btn-sm btn-success btnLoc" style="cursor:pointer">Lọc</button>
+                </div>
+                <div class="col-md-3">
+
+                </div>
+            </div>
+          
 
             <div class="card-tools">
                 <a href="/admin/posts/add" class="btn btn-primary">Thêm mới</a>
@@ -83,18 +100,61 @@
              * -------
              * Here we will create a few charts using ChartJS
              */
+            processData('', '');
+                        
+            $('body').on('click', '.btnLoc', function () {
+                //debugger;
+                var fromdate = $('#fromDate').val();
+                var todate = $('#toDate').val();
+                var from = '';
+                if (fromdate.trim() !== '') { 
+                    from = moment(fromdate).format("DD/MM/yyyy");
+                }
+
+                var to = '';
+                if (todate.trim() !== '') { 
+                    to = moment(todate).format("DD/MM/yyyy");
+                }
+                
+                // Xóa biểu đồ hiện tại từ canvas
+                var barChartCanvas = $('#barChart');
+                var chart = barChartCanvas.data('chart');
+                if (chart) {
+                    chart.destroy(); // Hủy biểu đồ hiện tại nếu tồn tại
+                }
+
+                // Vẽ canvas mới
+                var canvas = '<canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>';
+                $('.chart').html(canvas);
+                processData(from,to);
+            })
+                    
+           
+        })
+        function load_data(data) {
+            var strHtml = "";
+            $.each(data, function (i, item) {
+                var strDate = moment(item.Date).format("DD/MM/yyyy");
+                strHtml += "<tr>";
+                strHtml += "<td>" + (i + 1) + "</td>";
+                strHtml += "<td>" + strDate + "</td>";
+                strHtml += "<td>" + item.DoanhThu + "</td>";
+                strHtml += "<td>" + item.LoiNhuan + "</td>";
+                strHtml += "</tr>";
+            });
+            $('#load_data').html(strHtml);
+        };
+        function processData(fromDate, toDate) {
             var arrDoanhThu = [];
             var arrLoiNhuan = [];
             var arrDate = [];
             $.ajax({
                 url: '/Statistical/GetStatistical',
                 type: 'GET',
-                data: { fromDate: '', toDate:''},
+                data: { fromDate: fromDate, toDate: toDate },
                 success: function (rs) {
                     $.each(rs.Data, function (i, item) {
-                        
                         var strDate = moment(item.Date).format('DD/MM/yyyy');
-                        console.log(strDate);
                         arrDate.push(strDate);
                         arrDoanhThu.push(item.DoanhThu);
                         arrLoiNhuan.push(item.LoiNhuan);
@@ -147,25 +207,13 @@
                     new Chart(barChartCanvas, {
                         type: 'bar',
                         data: barChartData,
-                        options: barChartOptions
+                        options: barChartOptions,
+
                     })
                     load_data(rs.Data);
                 }
             })
-        })
-        function load_data(data) {
-            var strHtml = "";
-            $.each(data, function (i, item) {
-                var strDate = moment(item.Date).format("DD/MM/yyyy");
-                strHtml += "<tr>";
-                strHtml += "<td>" + (i + 1) + "</td>";
-                strHtml += "<td>" + strDate + "</td>";
-                strHtml += "<td>" + item.DoanhThu + "</td>";
-                strHtml += "<td>" + item.LoiNhuan + "</td>";
-                strHtml += "</tr>";
-            });
-            $('#load_data').html(strHtml);
-        };
+        }
     </script>
 }
 

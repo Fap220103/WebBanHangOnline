@@ -10,9 +10,7 @@
         <thead>
             <tr>
                 <th>#</th>
-                <th>Mã đơn hàng</th>
-               
-              
+                <th>Mã đơn hàng</th>       
                 <th>Tổng tiền</th>
                 <th>Trạng thái</th>
                 <th>Ngày tạo</th>
@@ -27,9 +25,7 @@
                 {
                     <tr>    
                         <td>@(i+1)</td>
-                        <td>@item.Code</td>
-                      
-                    
+                        <td>@item.Code</td>                           
                         <td>@WebBanHangOnline.Common.Common.FormatNumber(item.TotalAmount, 0)</td>
                         <td>
                             @(item.TypePayment==1?"Chờ thanh toán:":"Đã thanh toán")

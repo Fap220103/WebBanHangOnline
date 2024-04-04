@@ -34,9 +34,9 @@
                     <div class="single_product_pics">
                         <div class="row">
                             <div class="col-lg-3 thumbnails_col order-lg-1 order-2">
-                                <div class="single_product_thumbnails">
+                                <div class="single_product_thumbnails" style="overflow:hidden">
                                     <ul>
-                                        @foreach (var item in Model.ProductImage)
+                                        @foreach (var item in Model.ProductImage.Take(3))
                                         {
                                             if (item.IsDefault)
                                             {
@@ -136,7 +136,7 @@
 
                     <div id="tab_1" class="tab_container active">
                         <div class="row">
-                            @Model.Description
+                            @Html.Raw(Model.Detail)
                         </div>
                     </div>
 

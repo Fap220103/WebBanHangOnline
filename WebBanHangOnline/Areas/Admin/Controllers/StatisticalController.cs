@@ -37,6 +37,7 @@ namespace WebBanHangOnline.Areas.Admin.Controllers
             if(!string.IsNullOrEmpty(toDate))
             {
                 DateTime endDate = DateTime.ParseExact(toDate, "dd/MM/yyyy", null);
+                endDate = endDate.AddDays(1);
                 query = query.Where(x => x.CreateDate < endDate);
             }
             //truncate time bo thoi gian chi lay ngay thang nam
