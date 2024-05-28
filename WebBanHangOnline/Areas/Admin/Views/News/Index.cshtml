@@ -44,8 +44,43 @@
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Danh sách @ViewBag.Title</h3>
+            @*<div id="load_send">
 
+        </div>*@
+            <div id="loading" style="display: none;">
+                
+                Loading...
+            </div>
             <div class="card-tools">
+
+                @using (Ajax.BeginForm("ImportExcel_EPPLUS", "News", new AjaxOptions
+                {
+                    HttpMethod = "POST",
+                    InsertionMode = InsertionMode.Replace,
+                    LoadingElementId = "loading",
+                    OnSuccess = "OnSuccess"
+                }, new { enctype = "multipart/form-data" }))
+                {
+                    <script>
+                        //function OnBegin() {
+
+                        //    $('#load_send').html('<h2 style="color:red">Đang import.....</h2>');
+                        //}
+                        function OnSuccess(res) {
+                            if (res.Success) {
+                                $('#load_send').html('');
+                                alert(res.message);
+                            }
+                        }
+                        //function OnFailure(rs) {
+
+                        //}
+                    </script>
+                    <input name="ExcelFile" id="ufile" type="file" />
+                    <input type="submit" class="btn btn-success btnImport" value="Nhap Excel">
+                }
+
+                <a href="/admin/news/ExportExcel_EPPLUS" class="btn btn-success">Xuất Excel</a>
                 <a href="/admin/news/add" class="btn btn-primary">Thêm mới</a>
                 <a href="#" class="btn btn-danger" id="BtnDeleteAll">Xóa</a>
             </div>
@@ -185,6 +220,21 @@
                         checkbox.attr('selected', '');
                     }
                 })
+            })
+            
+            $('body').on('click', '.btnImport', function () {
+             
+                    $.ajax({
+                        url: '/admin/news/ImportExcel_EPPLUS',
+                        type: 'POST',
+                        data: {  },
+                        success: function (rs) {
+                            if (rs.success) {
+                                alert(re.message);
+                            }
+                        }
+                    });
+                }
             })
             //xoa 1 ban ghi
             $('body').on('click', '.btnDelete', function () {

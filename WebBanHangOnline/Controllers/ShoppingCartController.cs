@@ -104,6 +104,7 @@ namespace WebBanHangOnline.Controllers
                         Quantity = x.Quantity,
                         Price = x.Price,
                     }));
+                    order.Quantity = cart.Items.Sum(x => x.Quantity);
                     order.TotalAmount = cart.Items.Sum(x => (x.Quantity * x.Price));
                     order.TypePayment = req.TypePayment;
                     order.CreatedDate = DateTime.Now;

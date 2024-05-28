@@ -1,9 +1,13 @@
-﻿using PagedList;
+﻿using OfficeOpenXml;
+using PagedList;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI.WebControls;
 using WebBanHangOnline.Models;
 using WebBanHangOnline.Models.EF;
 
@@ -121,5 +125,85 @@ namespace WebBanHangOnline.Areas.Admin.Controllers
         {
             base.Dispose(disposing);
         }
+        public void ExportExcel_EPPLUS()
+        {
+
+            var list = db.News.ToList();
+            ExcelPackage ep = new ExcelPackage();
+            ExcelWorksheet Sheet = ep.Workbook.Worksheets.Add("Report");
+            Sheet.Cells["A1"].Value = "Tên";
+            Sheet.Cells["B1"].Value = "Mô tả";
+            Sheet.Cells["C1"].Value = "Chi tiet";
+            Sheet.Cells["D1"].Value = "Ảnh";
+            Sheet.Cells["E1"].Value = "Ngay tao";
+            Sheet.Cells["F1"].Value = "Ngay sua";
+
+            int row = 2;// dòng bắt đầu ghi dữ liệu
+            foreach (var item in list)
+            {
+                Sheet.Cells[string.Format("A{0}", row)].Value = item.Title;
+                Sheet.Cells[string.Format("B{0}", row)].Value = item.Description;
+                Sheet.Cells[string.Format("C{0}", row)].Value = item.Detail;
+                Sheet.Cells[string.Format("D{0}", row)].Value = item.Image;
+                Sheet.Cells[string.Format("E{0}", row)].Value = item.CreatedDate.ToString("dd/MM/yyyy");
+                Sheet.Cells[string.Format("F{0}", row)].Value = item.ModifiedDate.ToString("dd/MM/yyyy");
+                
+                row++;
+            }
+            Sheet.Cells["A:G"].AutoFitColumns();
+            Response.Clear();
+            Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            Response.AddHeader("content-disposition", "attachment; filename=" + "Report.xlsx");
+            Response.BinaryWrite(ep.GetAsByteArray());
+            Response.End();
+        }
+        [HttpPost]
+        public ActionResult ImportExcel_EPPLUS()
+        {
+            var fileUpload = Request.Files["ExcelFile"];
+            if (fileUpload != null && fileUpload.ContentLength > 0 && Path.GetExtension(fileUpload.FileName) == ".xlsx")
+            {
+                List<News> newList = new List<News>();
+
+                // Đọc dữ liệu từ tệp Excel
+                using (var package = new ExcelPackage(fileUpload.InputStream))
+                {
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+                    int rowCount = worksheet.Dimension.Rows;
+
+                    for (int row = 2; row <= rowCount; row++)
+                    {
+                        // Đọc dữ liệu từ mỗi hàng và thêm tin tức vào danh sách tin tức
+                        var news = new News
+                        {
+                            Title = worksheet.Cells[row, 1].Value?.ToString(),
+                            Description = worksheet.Cells[row, 2].Value?.ToString(),
+                            Detail = worksheet.Cells[row, 3].Value?.ToString(),
+                            Image = worksheet.Cells[row, 4].Value?.ToString(),
+                            CreatedDate = DateTime.ParseExact(worksheet.Cells[row, 5].Text, "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                            ModifiedDate = DateTime.ParseExact(worksheet.Cells[row, 6].Text, "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                            // Đọc các trường dữ liệu khác tương tự
+                            CategoryID = 3,
+                        };
+
+                        newList.Add(news);
+                    }
+                }
+
+                // Thêm dữ liệu vào cơ sở dữ liệu
+                db.News.AddRange(newList);
+                db.SaveChanges();
+
+                // Hiển thị thông báo cho người dùng
+                return Json(new { Success = true, message = "Thêm thành công" });
+            }
+            else
+            {
+                // Hiển thị thông báo lỗi nếu người dùng không tải lên tệp Excel hoặc tệp không đúng định dạng
+                return Json(new { Success = false, message = "Thêm thất bại" });
+            }
+        }
+
+
     }
 }

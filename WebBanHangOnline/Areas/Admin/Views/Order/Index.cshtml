@@ -56,7 +56,7 @@
                                 <td>@item.Phone</td>
                                 <td>@WebBanHangOnline.Common.Common.FormatNumber(item.TotalAmount, 0)</td>
                                 <td>
-                                    @(item.TypePayment==1?"Chờ thanh toán:":"Đã thanh toán")
+                                    @(item.TypePayment==1?"Chờ thanh toán":"Đã thanh toán")
                                 </td>
                                 <td>@item.CreatedDate.ToString("dd/MM/yyyy")</td>
                                 <td>
@@ -98,7 +98,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <input type="hidden" id="txtOrderID" value="0" />
+                <input type="hidden" id="txtOrderId" value="0" />
                 <div class="form-group">
                     <label>Trạng thái</label>
                     <select class="form-control" id="ddTrangThai">
@@ -121,21 +121,22 @@
     <script>
         $(document).ready(function () {
             $('body').on('click', '.btnCapNhat', function () {
-                debugger;
                 var id = $(this).data("id");
+            
                 $('#txtOrderId').val(id);
                 $('#modal-default').modal('show');
             });
-            $('body').on('click', '#btnLuu', function () {
-               
+
+            $('body').on('click', '#btnLuu', function (e) {
+                
                 var id = $('#txtOrderId').val();
                 var tt = $('#ddTrangThai').val();
                 $.ajax({
                     url: '/admin/order/UpdateTT',
                     type: 'POST',
-                    data: { id: id, trangthai:tt },
-                    success: function (rs) {
-                        if (rs.success) {
+                    data: { id: id, trangthai: tt },
+                    success: function (res) {
+                        if (res.Success) {
                             location.reload();
                         }
                     }

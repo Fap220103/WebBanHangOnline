@@ -1,0 +1,56 @@
+﻿@model PagedList.IPagedList<WebBanHangOnline.Models.FakeData>
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "GenerateFakeData";
+
+}
+<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/main_styles.css">
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+<h2>Fake Data</h2>
+<style>
+    .table {
+        margin-top: 100px;
+    }
+</style>
+<table class="table">
+    <thead>
+    <th>STT</th>
+    <th>Tên</th>
+    <th>Địa chỉ</th>
+    <th>Số điện thoại</th>
+    <th>Email</th>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            var i = ((ViewBag.Page - 1) * ViewBag.PageSize) + 1;
+            foreach (var item in Model)
+            {
+               
+                <tr>
+                    <td>@i</td>
+                    <td>@item.FullName</td>
+                    <td>@item.Address</td>
+                    <td>@item.PhoneNumber</td>
+                    <td>@item.Email</td>
+                    <td><img src="@item.ImageUrl" alt="Product Image" width="50" /></td>
+                </tr>
+                i++;
+            }
+        }
+
+
+        
+    </tbody>
+
+</table>
+<div class="row">
+    <div class="col-6"></div>
+    <div class="col-6" style="text-align:right">
+        @Html.PagedListPager(Model, page => Url.Action("GenerateFakeData", new { page }))
+    </div>
+</div>
+
+
+

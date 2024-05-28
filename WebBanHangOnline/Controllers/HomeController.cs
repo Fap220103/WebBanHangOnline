@@ -1,8 +1,11 @@
-﻿using System;
+﻿using Bogus;
+using PagedList;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI;
 using WebBanHangOnline.Models;
 using WebBanHangOnline.Models.EF;
 
@@ -70,6 +73,41 @@ namespace WebBanHangOnline.Controllers
             ViewBag.Message = "Your contact page.";
 
             return View();
+        }
+        public ActionResult GenerateFakeData(int? page)
+        {
+
+            var faker = new Bogus.Faker("vi");
+            // Tạo dữ liệu giả mạo cho một số thuộc tính cần thiết
+            var fakeDataList = new List<FakeData>();
+            for (int i = 0; i < 10; i++)
+            {
+                var product = new Faker<FakeData>()
+
+                .RuleFor(p => p.FullName, f => f.Commerce.ProductName())
+                 .RuleFor(p => p.Email, f => f.Commerce.ProductName())
+                    .RuleFor(p => p.Address, f => f.Commerce.ProductName())
+
+                .RuleFor(p => p.ImageUrl, f => $"https://picsum.photos/seed/{f.Random.Guid()}/200/300")
+                .Generate();
+
+
+                fakeDataList.Add(product);
+            }
+            //ViewBag.FakeDataList = fakeDataList;
+            //// Truyền dữ liệu giả mạo đến view để hiển thị
+            //return View(fakeDataList);
+            var pageSize = 100;
+            if (page == null)
+            {
+                page = 1;
+            }
+            IEnumerable<FakeData> items = fakeDataList.ToList();
+            var pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
+            items = items.ToPagedList(pageIndex, pageSize);
+            ViewBag.PageSize = pageSize;
+            ViewBag.Page = page;
+            return View(items);
         }
     }
 }

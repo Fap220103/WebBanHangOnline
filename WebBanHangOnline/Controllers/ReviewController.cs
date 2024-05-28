@@ -42,7 +42,7 @@ namespace WebBanHangOnline.Controllers
         [AllowAnonymous]
         public ActionResult Load_Review(int productId)
         {
-            var item = db.reviewProducts.Where(x=>x.ProductId==productId).OrderByDescending(x=>x.Id).Take(3).ToList();
+            var item = db.reviewProducts.Where(x=>x.ProductId==productId).OrderByDescending(x=>x.Id).Take(5).ToList();
             ViewBag.Count = item.Count;
             return PartialView(item);
         }
@@ -63,7 +63,7 @@ namespace WebBanHangOnline.Controllers
         [HttpGet]
         public ActionResult show_review(int productId)
         {
-            var item = db.reviewProducts.Where(x => x.ProductId == productId).OrderByDescending(x => x.Id).Take(3).ToList();
+            var item = db.reviewProducts.Where(x => x.ProductId == productId).OrderByDescending(x => x.Id).Take(5).ToList();
             if (item != null)
             {
                 return Json(new { items = item }, JsonRequestBehavior.AllowGet);

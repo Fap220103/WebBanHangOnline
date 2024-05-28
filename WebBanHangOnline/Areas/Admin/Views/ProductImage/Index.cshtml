@@ -127,6 +127,7 @@
             //var chuoi = String(idDefault);
             var conf = confirm("bạn có chắc chắn muốn thay đổi không");
             if (conf === true) {
+                idDefault = (typeof idDefault !== 'undefined') ? idDefault : -1;
                 $.ajax({
                     url: '/admin/ProductImage/ChangeDefault',
                     type: 'POST',

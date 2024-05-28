@@ -4,20 +4,29 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using WebBanHangOnline.Models;
+using WebBanHangOnline.Models.EF;
 
 namespace WebBanHangOnline.Controllers
 {
     public class ProductController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
-        // GET: Product
-        public ActionResult Index()
+        public List<int> getListId()
         {
-
-            var items = db.Products.ToList();
-            
+            var list = db.Products.Select(p=>p.Id).ToList();
+            return list;
+        }
+        // GET: Product
+        public ActionResult Index(string SearchProduct)
+        {
+            IEnumerable<Product> items = db.Products.OrderByDescending(x => x.Id);
+            if (!string.IsNullOrEmpty(SearchProduct))
+            {
+                items = items.Where(x => x.Alias.Contains(SearchProduct) || x.Title.Contains(SearchProduct));
+            }                     
             return View(items);
         }
+
         public ActionResult Detail(string alias,int id)
         {
             var item = db.Products.Find(id);
@@ -30,7 +39,31 @@ namespace WebBanHangOnline.Controllers
             }
             var countReview = db.reviewProducts.Where(x=>x.ProductId==id).Count();
             ViewBag.Count = countReview;
+            ViewBag.CountRate = CountRate(id);
+            ViewBag.CountRate2 = CountRate2(id);
             return View(item);
+        }
+        public double CountRate(int productId)
+        {
+            var items = db.reviewProducts.Where(x => x.ProductId == productId);
+            if (items.Any())
+            {             
+                var n = items.Count();
+                var totalRate = items.Sum(x => x.Rate);
+                return (double)totalRate / n;
+            }
+            return 0;
+        }
+        public int CountRate2(int productId)
+        {
+            var items = db.reviewProducts.Where(x => x.ProductId == productId);
+            if (items.Any())
+            {
+                var n = items.Count();
+                var totalRate = items.Sum(x => x.Rate);
+                return totalRate / n;
+            }
+            return 0;
         }
         public ActionResult ProductCategory(string alias,int? id)
         {
@@ -51,7 +84,7 @@ namespace WebBanHangOnline.Controllers
         
         public ActionResult Partial_ItemsByCateId()
         {
-            var items = db.Products.Where(x=>x.IsHome && x.IsActive).Take(10).ToList();
+            var items = db.Products.OrderByDescending(x=>x.Id).Where(x=>x.IsActive).Take(10).ToList();
             return PartialView(items);
         }
         public ActionResult Partial_ProductSales()

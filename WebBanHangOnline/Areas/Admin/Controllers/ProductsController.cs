@@ -1,4 +1,5 @@
-﻿using PagedList;
+﻿using OfficeOpenXml;
+using PagedList;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ using WebBanHangOnline.Models.EF;
 
 namespace WebBanHangOnline.Areas.Admin.Controllers
 {
-    [Authorize(Roles = "Admin,Employee")]
+    //[Authorize(Roles = "Admin,Employee")]
     public class ProductsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -39,31 +40,31 @@ namespace WebBanHangOnline.Areas.Admin.Controllers
         {
             if(ModelState.IsValid)
             {
-                if(Images!=null&& Images.Count > 0)
-                {
-                    for(int i = 0; i < Images.Count; i++)
-                    {
-                        if(i+1 == rDefault[0])
-                        {
-                            model.Image = Images[i];
-                            model.ProductImage.Add(new ProductImage
-                            {
-                                ProductId = model.Id,
-                                Image = Images[i],
-                                IsDefault = true,
-                            });
-                        }
-                        else
-                        {
-                            model.ProductImage.Add(new ProductImage
-                            {
-                                ProductId = model.Id,
-                                Image = Images[i],
-                                IsDefault = false,
-                            });
-                        }
-                    }
-                }
+                //if(Images!=null&& Images.Count > 0)
+                //{
+                //    for(int i = 0; i < Images.Count; i++)
+                //    {
+                //        if(i+1 == rDefault[0])
+                //        {
+                //            model.Image = Images[i];
+                //            model.ProductImage.Add(new ProductImage
+                //            {
+                //                ProductId = model.Id,
+                //                Image = Images[i],
+                //                IsDefault = true,
+                //            });
+                //        }
+                //        else
+                //        {
+                //            model.ProductImage.Add(new ProductImage
+                //            {
+                //                ProductId = model.Id,
+                //                Image = Images[i],
+                //                IsDefault = false,
+                //            });
+                //        }
+                //    }
+                //}
                 model.CreatedDate = DateTime.Now;
                 model.ModifiedDate = DateTime.Now;
                 if (string.IsNullOrEmpty(model.SeoTitle))
@@ -110,8 +111,8 @@ namespace WebBanHangOnline.Areas.Admin.Controllers
             var item = db.Products.Find(id);
             if (item != null)
             {
-                var checkImg = item.ProductImage.Where(x => x.ProductId == item.Id);
-                if(checkImg!=null)
+                var checkImg = item.ProductImage.ToList();
+                if (checkImg!=null)
                 {
                     foreach(var img in checkImg)
                     {
@@ -183,5 +184,40 @@ namespace WebBanHangOnline.Areas.Admin.Controllers
             }
             return Json(new { success = false });
         }
+        public void ExportExcel_EPPLUS()
+        {
+
+            var list = db.Products.ToList();
+            ExcelPackage ep = new ExcelPackage();
+            ExcelWorksheet Sheet = ep.Workbook.Worksheets.Add("Report");
+            Sheet.Cells["A1"].Value = "Mã sản phẩm";
+            Sheet.Cells["B1"].Value = "Tên sản phẩm";
+            Sheet.Cells["C1"].Value = "code";
+            Sheet.Cells["D1"].Value = "Mô tả";
+            Sheet.Cells["E1"].Value = "Ảnh";
+            Sheet.Cells["F1"].Value = "Giá";
+            Sheet.Cells["G1"].Value = "Số lượng";
+     
+            int row = 2;// dòng bắt đầu ghi dữ liệu
+            foreach (var item in list)
+            {
+                Sheet.Cells[string.Format("A{0}", row)].Value = item.Id;
+                Sheet.Cells[string.Format("B{0}", row)].Value = item.Title;
+                Sheet.Cells[string.Format("C{0}", row)].Value = item.ProductCode;
+                Sheet.Cells[string.Format("D{0}", row)].Value = item.Description;
+                Sheet.Cells[string.Format("E{0}", row)].Value = item.ProductImage;
+                Sheet.Cells[string.Format("F{0}", row)].Value = item.Price;
+                Sheet.Cells[string.Format("G{0}", row)].Value = item.Quantity;
+                row++;
+            }
+            Sheet.Cells["A:AZ"].AutoFitColumns();
+            Response.Clear();
+            Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            Response.AddHeader("content-disposition", "attachment; filename=" + "Report.xlsx");
+            Response.BinaryWrite(ep.GetAsByteArray());
+            Response.End();
+
+        }
+
     }
 }

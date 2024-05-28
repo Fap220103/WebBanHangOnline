@@ -42,7 +42,7 @@ namespace WebBanHangOnline.Areas.Admin.Controllers
         [HttpPost]
         public ActionResult ChangeDefault(int id,int idDefault)
         {
-            if (idDefault != 0)
+            if (idDefault != -1)
             {
                 var itemDefault = db.ProductImages.FirstOrDefault(x => x.Id == idDefault);
                 if (itemDefault != null)

@@ -14,6 +14,13 @@ namespace WebBanHangOnline
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
+                name: "GenerateFakeData",
+                url: "Home/GenerateFakeData",
+                defaults: new { controller = "Home", action = "GenerateFakeData" },
+                 namespaces: new[] { "WebBanHangOnline.Controllers" }
+            );
+
+            routes.MapRoute(
                 name: "CheckOut",
                 url: "thanh-toan/{alias}",
                 defaults: new { controller = "ShoppingCart", action = "CheckOut", alias = UrlParameter.Optional },

@@ -12,14 +12,32 @@
         <script>
             function OnBeginRE() {
                 $('#review_submit').attr("disabled", "disabled");
-                $('#load_send').html('<h2>Đang gửi.....</h2>');
+                $('#load_send').html('<h2 style="color:red">Đang gửi.....</h2>');
             }
             function OnSuccessRE(res) {
+                debugger;
                 if (res.Success) {
+                    $('#load_send').html('');
                     $("#review_form")[0].reset();
+                    //location.reload();
+
+
                 }
             }
-                                                     
+             function reloadReview() {
+      
+                    $.ajax({
+                        url: "/review/show_review",
+                        type: "GET",
+                        data: { productId: productId },
+                        success: function(data) {
+                            $("#showReview").html(data);
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error loading review:", error);
+                        }
+                    });
+                }
         </script>
         @Html.AntiForgeryToken()
         @*<form id="review_form" action="post">*@

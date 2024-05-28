@@ -47,8 +47,20 @@ COLOR PALETTE
 	margin: 0;
 	padding: 0;
 }
-body
-{
+.searchSP {
+	margin-bottom: 1em;
+	text-align: center;
+}
+	.searchSP input {
+		background-color: #fff;
+		outline: none;
+		width:300px;
+		border-radius: 20px;
+		padding: 1em;
+		font-size: 0.8em;
+		text-align: center;
+	}
+body {
 	font-family: 'Poppins', sans-serif;
 	font-size: 14px;
 	line-height: 23px;

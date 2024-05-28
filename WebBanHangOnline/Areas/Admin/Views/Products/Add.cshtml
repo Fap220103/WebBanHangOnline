@@ -85,8 +85,13 @@
                                             @Html.ValidationMessageFor(x => x.ProductCode, null, new { @class = "text-danger" })
                                         </div>
                                         <div class="form-group">
+                                            <label for="exampleInputEmail1">Hình Ảnh</label>
+                                            @Html.TextBoxFor(x => x.Image, new { @class = "form-control", @placeholder = "hình ảnh" })
+                                            @Html.ValidationMessageFor(x => x.Image, null, new { @class = "text-danger" })
+                                        </div>
+                                        <div class="form-group">
                                             <label for="exampleInputEmail1">Danh mục</label>
-                                            @Html.DropDownListFor(x => x.ProductCategoryID, ViewBag.ProductCategory as SelectList,"-Chọn danh mục sản phẩm-", new { @class = "form-control"})
+                                            @Html.DropDownListFor(x => x.ProductCategoryID, ViewBag.ProductCategory as SelectList, "-Chọn danh mục sản phẩm-", new { @class = "form-control" })
                                             @Html.ValidationMessageFor(x => x.ProductCategoryID, null, new { @class = "text-danger" })
                                         </div>
                                         <div class="form-group">
@@ -96,7 +101,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Chi tiết sản phẩm</label>
-                                            @Html.TextBoxFor(x => x.Detail, new { @class = "form-control", @id= "txtDetail" })
+                                            @Html.TextBoxFor(x => x.Detail, new { @class = "form-control", @id = "txtDetail" })
                                             @Html.ValidationMessageFor(x => x.Detail, null, new { @class = "text-danger" })
                                         </div>
                                         <div class="row">

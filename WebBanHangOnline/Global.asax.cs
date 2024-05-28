@@ -1,3 +1,4 @@
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace WebBanHangOnline
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             Application["HomNay"] = 0;
             Application["HomQua"] = 0;
             Application["TuanNay"] = 0;

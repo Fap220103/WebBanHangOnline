@@ -46,6 +46,7 @@
             <h3 class="card-title">Danh sách @ViewBag.Title</h3>
 
             <div class="card-tools">
+                <a href="/admin/products/ExportExcel_EPPLUS" class="btn btn-success">Xuất Excel</a>
                 <a href="/admin/products/add" class="btn btn-primary">Thêm mới</a>
                 <a href="#" class="btn btn-danger" id="BtnDeleteAll">Xóa</a>
             </div>
@@ -95,7 +96,7 @@
                             <tr id="trow_@item.Id">
                                 <td><input type="checkbox" class="chkItem" value="@item.Id" /></td>
                                 <td>@i</td>
-                                <td><img style="cursor:pointer" class="imgproduct" data-id="@item.Id" src="@(item.ProductImage.FirstOrDefault(x => x.IsDefault == true)?.Image ?? "/Uploads/images/SanPham/h0.png")" width="50" /></td>
+                                <td><img style="cursor:pointer" class="imgproduct" data-id="@item.Id" src="@item.Image" width="50" /></td>
 
                                 <td>@item.Title</td>
                                 <td>@item.ProductCategory.Title</td>
@@ -234,7 +235,7 @@
                 var conf = confirm('Bạn có chắc chắn muốn xóa không?');
                 if (conf === true) {
                     $.ajax({
-                        url: '/admin/products/delete',
+                        url: '/admin/products/Delete',
                         type: 'POST',
                         data: { id: id },
                         success: function (rs) {

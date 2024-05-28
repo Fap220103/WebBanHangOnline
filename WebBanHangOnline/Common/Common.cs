@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Net.Mail;
+using System.Net.Mail;  
 using System.Net;
-using System.Web;
+using System.Collections.Generic;
+using WebBanHangOnline.Models;
 
 namespace WebBanHangOnline.Common
 {
@@ -86,7 +85,15 @@ namespace WebBanHangOnline.Common
         public static string HtmlRate(int rate)
         {
             var str = "";
-            if(rate ==1)
+            if (rate == 0)
+            {
+                str = @" <li><i class='fa fa-star-o' aria-hidden='true'></i></li>
+                         <li><i class='fa fa-star-o' aria-hidden='true'></i></li>
+                         <li><i class='fa fa-star-o' aria-hidden='true'></i></li>
+                         <li><i class='fa fa-star-o' aria-hidden='true'></i></li>
+                         <li><i class='fa fa-star-o' aria-hidden='true'></i></li>";
+            }
+            if (rate ==1)
             {
                 str = @" <li><i class='fa fa-star' aria-hidden='true'></i></li>
                          <li><i class='fa fa-star-o' aria-hidden='true'></i></li>
@@ -128,6 +135,26 @@ namespace WebBanHangOnline.Common
             }
             return str;
         }
+        public static List<FakeData> GenerateFakeData()
+        {
+            var faker = new Bogus.Faker("vi");
+
+            // Tạo dữ liệu giả mạo cho một số thuộc tính cần thiết
+            var fakeDataList = new List<FakeData>();
+            for (int i = 0; i < 20; i++)
+            {
+                var fakeData = new FakeData()
+                {
+                    FullName = faker.Name.FullName(),
+                    Address = faker.Address.FullAddress(),
+                    PhoneNumber = faker.Phone.PhoneNumber(),
+                    Email = faker.Internet.Email()
+                };
+                fakeDataList.Add(fakeData);
+            }
+            return fakeDataList;
+        } 
+       
     }
 
 }
