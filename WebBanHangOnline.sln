@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test_BaoMat", "Test_BaoMat\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "test_Product", "test_Product\test_Product.csproj", "{ADBCE460-4BB6-4F41-AA2B-06E3D3520D88}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test_Xunit", "test_Xunit\test_Xunit.csproj", "{56A5ADEE-D8F7-44A2-81B8-0CF205AC3079}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "test_Xunit", "test_Xunit\test_Xunit.csproj", "{56A5ADEE-D8F7-44A2-81B8-0CF205AC3079}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

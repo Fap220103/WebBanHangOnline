@@ -1,5 +1,7 @@
 ﻿using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Office2010.Excel;
 using Irony.Parsing;
+using OfficeOpenXml;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
@@ -15,20 +17,27 @@ namespace test_Xunit
 {
     public class test_User 
     {
-        
+           
         private readonly IWebDriver _driver;
         private readonly Random _random;
-        private readonly ProductService _productService;
+        private GenerateData _generateData;
+        private getProductID _getProduct;
+        private Config _config;
         public test_User()
         {
             _driver = new ChromeDriver();
             _driver.Manage().Window.Maximize();
             _random = new Random();
+            _generateData = new GenerateData();
+            _getProduct = new getProductID();
+            _config = new Config();
+           
         }
+      
         [Fact]
         public void TestRandomUserActions()
         {
-           
+            _config.ConfigureEPPlus();
             // Mở URL của ứng dụng ASP.NET
             _driver.Navigate().GoToUrl("https://localhost:44353/");
 
@@ -41,7 +50,7 @@ namespace test_Xunit
         {
             var actions = new Action[]
             {
-                AddProductToCart,
+                FillFormCart,
                
                
            
@@ -50,23 +59,43 @@ namespace test_Xunit
             var action = actions[_random.Next(actions.Length)];
             action.Invoke();
         }
+      
+        public void GoToDetail()
+        {
+            _driver.Navigate().GoToUrl("https://localhost:44353/san-pham");
+            List<int> productId = _getProduct.getProductId();
+            var randomIndex = _random.Next(productId.Count);
+            var randomId = productId[randomIndex];
+            
+            _driver.FindElement(By.XPath($"//a[@id='product-name-{randomId}']")).Click();
+
+        }
+        public void GoToProduct()
+        {
+            _driver.FindElement(By.Id("category-top-1008")).Click();
+        }
+        public void GoToCheckOut()
+        {
+            _driver.FindElement(By.XPath("//a[@id='btnThanhToan']")).Click();
+            Thread.Sleep(1000);
+        }
+        public void AddtoCart()
+        {
+            _driver.FindElement(By.XPath("//a[@id = 'btnAddToCart']")).Click();
+        }
         private void AddProductToCart()
         {
-            var productIds = _productService.GetProductIds();
-            //int[] numbers = {   16, 17, 18, 1031, 1032, 1033, 1034, 1035 };
-            //int randomIndex = _random.Next(0, numbers.Length);
-            //int randomProduct = numbers[randomIndex];
-            if (productIds == null || !productIds.Any())
-            {
-               Console.WriteLine("No products found.");
-               return;
-            }
-
-            var randomIndex = _random.Next(productIds.Count);
-            var randomId = productIds[randomIndex];
-            _driver.FindElement(By.XPath($"//a[@id = 'btnAddToCart_{randomId}']")).Click();
+            List<int> productId = _getProduct.getProductId();
+           
+            
+                var randomIndex = _random.Next(productId.Count);
+                var randomId = productId[randomIndex];
+                // Thử tìm phần tử sản phẩm trên trang web với ID đã random
+                _driver.FindElement(By.XPath($"//a[@id='btnAddToCart_{randomId}']")).Click();
+      
             AccessAlert();
         }
+
         private void AccessAlert()
         {
             WebDriverWait wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
@@ -91,13 +120,14 @@ namespace test_Xunit
         }
         private void ModifyProductQuantity()
         {
-            var cart = _driver.FindElement(By.Id("cart-id")); // Thay đổi ID theo trang của bạn
-            cart.Click();
-            var quantityBox = _driver.FindElement(By.ClassName("quantity-box-class")); // Thay đổi class name theo trang của bạn
-            quantityBox.Clear();
-            quantityBox.SendKeys(_random.Next(1, 10).ToString());
-            var updateButton = _driver.FindElement(By.Id("update-button-id")); // Thay đổi ID theo trang của bạn
-            updateButton.Click();
+            int randomQuantity = _random.Next(1, 6);
+            for (int j = 0; j < randomQuantity; j++)
+            {
+                // Đợi 1 giây giữa các lần bấm nút
+                Thread.Sleep(1000);
+                // Bấm nút tăng số lượng
+                _driver.FindElement(By.XPath($"//i[@id='quantity-plus']")).Click();
+            }
         }
 
         private void GoToCart()
@@ -137,7 +167,40 @@ namespace test_Xunit
                 return false;
             }
         }
-
        
+        public void FillFormCart()
+        {
+            _driver.Navigate().GoToUrl("https://localhost:44353/san-pham");
+            List<int> productId = _getProduct.getProductId();
+            var randomIndex = _random.Next(productId.Count);
+            var randomId = productId[randomIndex];
+
+            _driver.FindElement(By.XPath($"//a[@id='product-name-{randomId}']")).Click();
+            AddtoCart();
+            AccessAlert();
+            GoToCart();
+            GoToCheckOut();
+            //_generateData.generateData(10);
+            List<FakeData> list = _generateData.ReadExcelData("F:\\Ky_6\\Kiểm Thử\\FakeData.xlsx",5);
+            for (int i = 0; i < list.Count; i++)
+            {
+                _driver.FindElement(By.Name("CustomerName")).Clear();
+                _driver.FindElement(By.Name("CustomerName")).SendKeys(list[i].FullName);
+                Thread.Sleep(1000);
+                _driver.FindElement(By.Name("Phone")).Clear();
+                _driver.FindElement(By.Name("Phone")).SendKeys(list[i].PhoneNumber);
+                Thread.Sleep(1000);
+                _driver.FindElement(By.Name("Address")).Clear();
+                _driver.FindElement(By.Name("Address")).SendKeys(list[i].Address);
+                Thread.Sleep(1000);
+                _driver.FindElement(By.Name("Email")).Clear();
+                _driver.FindElement(By.Name("Email")).SendKeys(list[i].Email);
+                Thread.Sleep(1000);
+                _driver.FindElement(By.XPath("//button[@id = 'btn-success']")).Click();
+                Thread.Sleep(2000);
+            }
+            
+        }
+
     }
 }

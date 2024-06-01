@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ClosedXML.Excel;
 using Xunit;
+using OfficeOpenXml;
 
 namespace test_Xunit
 {
@@ -52,6 +53,36 @@ namespace test_Xunit
                 workbook.SaveAs(filePath);
                 Console.WriteLine($"File đã được lưu tại {Path.GetFullPath(filePath)}");
             }
+        }
+        public List<FakeData> ReadExcelData(string filePath,int n)
+        {
+            var fakeDataList = new List<FakeData>();
+
+            // Mở tệp Excel
+            using (var package = new ExcelPackage(new FileInfo(filePath)))
+            {
+                // Lấy Sheet đầu tiên từ tệp Excel
+                var worksheet = package.Workbook.Worksheets[0];
+
+                // Lấy số hàng và số cột
+                int rowCount = worksheet.Dimension.Rows;
+                int colCount = worksheet.Dimension.Columns;
+
+                // Duyệt qua từng hàng, bắt đầu từ hàng thứ 2 vì hàng đầu tiên chứa tiêu đề
+                for (int row = 2; row <= Math.Min(n + 1, rowCount); row++) // Sử dụng Math.Min để chọn giá trị nhỏ nhất giữa n + 1 và số hàng thực tế trong tệp Excel
+                {
+                    var fakeData = new FakeData();
+                    fakeData.FullName = worksheet.Cells[row, 1].Value?.ToString(); // Sử dụng ?. để tránh lỗi nếu cell null
+                    fakeData.Address = worksheet.Cells[row, 2].Value?.ToString();
+                    fakeData.PhoneNumber = worksheet.Cells[row, 3].Value?.ToString();
+                    fakeData.Email = worksheet.Cells[row, 4].Value?.ToString();
+
+                    // Thêm dữ liệu vào danh sách
+                    fakeDataList.Add(fakeData);
+                }
+            }
+
+            return fakeDataList;
         }
         public class GenerateDataTests
         {

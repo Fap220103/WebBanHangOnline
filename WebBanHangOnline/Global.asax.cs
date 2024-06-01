@@ -3,9 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using WebBanHangOnline.App_Start;
 
 namespace WebBanHangOnline
 {
@@ -13,6 +15,7 @@ namespace WebBanHangOnline
     {
         protected void Application_Start()
         {
+            GlobalConfiguration.Configure(WebApiConfig.Register);
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
@@ -26,6 +29,9 @@ namespace WebBanHangOnline
             Application["ThangTruoc"] = 0;
             Application["TatCa"] = 0;
             Application["visitors_online"] = 0;
+           
+          
+           
         }
         void Session_Start(object sender, EventArgs e)
         {

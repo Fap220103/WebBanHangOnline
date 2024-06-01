@@ -84,7 +84,7 @@ namespace WebBanHangOnline.Controllers
         
         public ActionResult Partial_ItemsByCateId()
         {
-            var items = db.Products.OrderByDescending(x=>x.Id).Where(x=>x.IsActive).Take(10).ToList();
+            var items = db.Products.OrderByDescending(x=>x.Id).Where(x=>x.IsActive).ToList();
             return PartialView(items);
         }
         public ActionResult Partial_ProductSales()
