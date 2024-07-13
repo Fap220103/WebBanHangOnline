@@ -92,11 +92,20 @@
                             var strCheck = item.IsActive ? "<i class='fa fa-check text-success'></i>" : "<i class='fas fa-times text-danger'></i>";
                             var strCheckHome = item.IsHome ? "<i class='fa fa-check text-success'></i>" : "<i class='fas fa-times text-danger'></i>";
                             var strCheckSale = item.IsSale ? "<i class='fa fa-check text-success'></i>" : "<i class='fas fa-times text-danger'></i>";
-
+                            var strImg = "";
+                            var CheckImage = item.ProductImage.FirstOrDefault(x => x.IsDefault);
+                            if (CheckImage != null)
+                            {
+                                strImg = CheckImage.Image;
+                            }
+                            else
+                            {
+                                strImg = "/Uploads/images/SanPham/h0.png";
+                            }
                             <tr id="trow_@item.Id">
                                 <td><input type="checkbox" class="chkItem" value="@item.Id" /></td>
                                 <td>@i</td>
-                                <td><img style="cursor:pointer" class="imgproduct" data-id="@item.Id" src="@item.Image" width="50" /></td>
+                                <td><img style="cursor:pointer" class="imgproduct" data-id="@item.Id" src="@strImg" width="50" /></td>
 
                                 <td>@item.Title</td>
                                 <td>@item.ProductCategory.Title</td>

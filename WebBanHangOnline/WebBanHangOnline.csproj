@@ -347,6 +347,10 @@
     <Compile Include="Migrations\202403241258046_CreateWishList.designer.cs">
       <DependentUpon>202403241258046_CreateWishList.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202407031647254_addStatus.cs" />
+    <Compile Include="Migrations\202407031647254_addStatus.designer.cs">
+      <DependentUpon>202407031647254_addStatus.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CommonAbstract.cs" />
@@ -371,6 +375,7 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\OrderViewModel.cs" />
+    <Compile Include="Models\Payments\VnPayLibrary.cs" />
     <Compile Include="Models\SettingSystemViewModel.cs" />
     <Compile Include="Models\ShoppingCart.cs" />
     <Compile Include="Models\EF\ThongKe.cs" />
@@ -3763,6 +3768,7 @@
     <Content Include="Views\WishList\Index.cshtml" />
     <Content Include="Views\Review\LichSuDonHang.cshtml" />
     <Content Include="Views\Home\GenerateFakeData.cshtml" />
+    <Content Include="Views\ShoppingCart\VnpayReturn.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -3770,7 +3776,6 @@
     <Folder Include="Content\ckfinder\userfiles\" />
     <Folder Include="Uploads\files\" />
     <Folder Include="Uploads\flash\" />
-    <Folder Include="Views\Kiemthu\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />
@@ -3859,6 +3864,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202403241258046_CreateWishList.resx">
       <DependentUpon>202403241258046_CreateWishList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202407031647254_addStatus.resx">
+      <DependentUpon>202407031647254_addStatus.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

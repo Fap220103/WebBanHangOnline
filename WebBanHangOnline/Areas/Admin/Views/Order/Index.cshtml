@@ -38,6 +38,7 @@
                         <th>Tên khách hàng</th>
                         <th>Phone</th>
                         <th>Tổng tiền</th>
+                        <th>Phương thức</th>
                         <th>Trạng thái</th>
                         <th>Ngày tạo</th>
                         <th></th>
@@ -56,7 +57,25 @@
                                 <td>@item.Phone</td>
                                 <td>@WebBanHangOnline.Common.Common.FormatNumber(item.TotalAmount, 0)</td>
                                 <td>
-                                    @(item.TypePayment==1?"Chờ thanh toán":"Đã thanh toán")
+                                    @(item.TypePayment==1?"COD":"Chuyển khoản")
+                                </td>
+                                <td>
+                                    @if (item.Status == 1)
+                                    {
+                                        <span>Chưa thanh toán</span>
+                                    }
+                                    else if (item.Status == 2)
+                                    {
+                                        <span>Đã thanh toán</span>
+                                    }
+                                    else if (item.Status == 3)
+                                    {
+                                        <span>Hoàn thành</span>
+                                    }
+                                    else if (item.Status == 4)
+                                    {
+                                        <span>Hủy</span>
+                                    }
                                 </td>
                                 <td>@item.CreatedDate.ToString("dd/MM/yyyy")</td>
                                 <td>
