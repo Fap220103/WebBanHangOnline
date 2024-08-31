@@ -1,4 +1,5 @@
 ﻿$(document).ready(function () {
+   
     showcount();
     $('body').on('click', '.btnAddToCart', function (e) {
         e.preventDefault();
@@ -13,6 +14,7 @@
             type: 'POST',
             data: { id: id, quantity: quantity },
             success: function (rs) {
+                console.log(rs);
                 if (rs.Success) {
                     $('#checkout_items').html(rs.Count);
                     alert(rs.msg);

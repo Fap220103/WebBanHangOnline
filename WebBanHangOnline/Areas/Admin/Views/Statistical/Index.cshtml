@@ -153,8 +153,10 @@
                 type: 'GET',
                 data: { fromDate: fromDate, toDate: toDate },
                 success: function (rs) {
+                    console.log(rs);
                     $.each(rs.Data, function (i, item) {
                         var strDate = moment(item.Date).format('DD/MM/yyyy');
+                        console.log(strDate);
                         arrDate.push(strDate);
                         arrDoanhThu.push(item.DoanhThu);
                         arrLoiNhuan.push(item.LoiNhuan);
